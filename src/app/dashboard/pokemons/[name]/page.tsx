@@ -3,8 +3,8 @@ import { Metadata } from "next";
 import Image from 'next/image';
 import { notFound } from "next/navigation";
 
-interface Props {
-  params: { name: string };
+ interface Props {
+  params: Promise<{ name: string }>;
 }
 
 //! En build time
@@ -26,7 +26,7 @@ interface Props {
  export async function generateMetadata({ params }:Props): Promise<Metadata> {
 
   try {
-    const { id, name } = await getPokemon (params.name);
+    const { id , name } = await  getPokemon((await params).name);
   
     return {
       title: `#${ id } - ${ name }`,
@@ -65,7 +65,7 @@ const getPokemon = async(name: string): Promise<Pokemon> => {
 
 export default async function PokemonPage({ params } : Props) {
 
-  const pokemon = await getPokemon(params.name);
+  const pokemon = await getPokemon( (await params).name);
 
 
   return (
